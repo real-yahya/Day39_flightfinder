@@ -12,12 +12,12 @@ class DataManager:
         return self.data
 
     def update_iata(self):
-        for city in self.data[0]['prices']:
+        for city in self.data[0]["prices"]:
             iata = {
-                'price': {
-                    'iataCode': city['iataCode'],
+                "price": {
+                    "iataCode": city["iataCode"],
                 }
             }
             response = requests.put(
-                f"{self.apiURL}/{city['id']}", json=iata)
+                url=f"{self.apiURL}/{city['id']}", json=iata)
             print(response.text)
