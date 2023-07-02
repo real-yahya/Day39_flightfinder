@@ -8,7 +8,7 @@ class FlightSearch:
     def __init__(self):
         self.locApiUrl = "https://api.tequila.kiwi.com/locations/query"
         self.serApiUrl = 'https://api.tequila.kiwi.com/v2/search'
-        self.apikey = 'afsKF3L9gQuO1b2kMTDAaNDfPTwdn5Xe'
+        self.apikey = 'wqfIUUnUdIyhxYmYmP0IGZLajQlXri_i'
         self.header = {'apikey': self.apikey}
 
     def iatacodes(self, city):
@@ -21,29 +21,25 @@ class FlightSearch:
         code = response.json()['locations'][0]['code']
         return code
 
-    def flight_search(self, city):
+    def flight_search(self, origin_city_code, destination_city_code, from_time, to_time):
         next_day = datetime.datetime.now() + datetime.timedelta(1)
         six_months = next_day + datetime.timedelta(180)
         parameters = {
-            'fly_from': 'LON',
-            'fly_to': city,
-            'date_from': next_day.strftime("%d/%m/%Y"),
-            'date_to': six_months.strftime("%d/%m/%Y"),
-            'nights_in_dst_from': 7,
-            'nights_in_dst_to': 28,
+            "fly_from": origin_city_code,
+            "fly_to": destination_city_code,
+            "date_from": from_time.strftime("%d/%m/%Y"),
+            "date_to": to_time.strftime("%d/%m/%Y"),
+            "nights_in_dst_from": 7,
+            "nights_in_dst_to": 28,
             "flight_type": "round",
-            'one_per_date': 1,
+            "one_for_city": 1,
             "max_stopovers": 0,
-            'curr': 'GBP'
+            "curr": "GBP"
         }
         response = requests.get(
             url=self.serApiUrl, headers=self.header, params=parameters)
-        try:
-            data = response.json()["data"][0]
-        except IndexError:
-            print(f"No flights found for {city}.")
-            return None
-        print(data)
+
+        data = response.json()['data'][0]
 
         flight_data = FlightData(
             price=data["price"],

@@ -2,6 +2,7 @@
 from data_manager import DataManager
 from flight_search import FlightSearch
 from pprint import pprint
+import datetime
 
 sheets = DataManager()
 scanner = FlightSearch()
@@ -55,7 +56,6 @@ sheet_data = [
 
 ]
 
-
 # if sheet_data[0]['prices'][0]["iataCode"] == "":
 #    for row in sheet_data[0]['prices']:
 #        row["iataCode"] = scanner.iatacodes(row["city"])
@@ -63,5 +63,14 @@ sheet_data = [
 #    sheets.data = sheet_data
 #    sheets.update_iata()
 
-for row in sheet_data:
-    scanner.flight_search(row['IATA Code'])
+
+tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+six_month_from_today = datetime.datetime.now() + datetime.timedelta(days=(6 * 30))
+ORIGIN_CITY_IATA = 'LON'
+for destination in sheet_data:
+    flight = scanner.flight_search(
+        ORIGIN_CITY_IATA,
+        destination["IATA Code"],
+        from_time=tomorrow,
+        to_time=six_month_from_today
+    )
