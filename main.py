@@ -1,11 +1,14 @@
 # This file will need to use the DataManager,FlightSearch, FlightData, NotificationManager classes to achieve the program requirements.
+from twilio.rest import Client
 from data_manager import DataManager
 from flight_search import FlightSearch
+from notification_manager import NotificationManager
 from pprint import pprint
 import datetime
 
 sheets = DataManager()
 scanner = FlightSearch()
+bot = NotificationManager()
 # sheet_data = [sheets.read_sheet()] monthly requests all used
 sheet_data = [
     {
@@ -74,3 +77,7 @@ for destination in sheet_data:
         from_time=tomorrow,
         to_time=six_month_from_today
     )
+    print(flight.price)
+    if flight.price < destination['Lowest Price']:
+        bot.send_msg(price=flight.price, departure_city=flight.orgin_city, departure_airport=flight.orgin_airport, arrival_city=flight.destination_city,
+                     arrival_airport=flight.destination_airport, departure_date=flight.out_date, return_date=flight.return_date)
