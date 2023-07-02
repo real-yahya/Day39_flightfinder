@@ -9,6 +9,7 @@ class DataManager:
     def read_sheet(self):
         response = requests.get(self.apiURL)
         self.data = response.json()
+        print(self.data)
         return self.data
 
     def update_iata(self):
